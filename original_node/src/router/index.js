@@ -1,7 +1,7 @@
 const handleBlogRouter = require('./blog')
 const handleUserRouter = require('./user')
 
-const handleRouter = (req, res) => {
+const handleRouter = async (req, res) => {
     const pathArr = req.path.split('/');
     // 路由模型
     req.model = pathArr[2] || '';
@@ -9,14 +9,14 @@ const handleRouter = (req, res) => {
     req.apiSuffix = pathArr[3] || '';
     // 处理与博客相关的路由
     // blogData 为SuccessModel或ErrorModel实例
-    const blogData = handleBlogRouter(req, res);
+    const blogData = await handleBlogRouter(req, res);
     if (blogData) {
         res.end(JSON.stringify(blogData));
         return;
     }
 
     // 处理与用户相关的路由
-    const userData = handleUserRouter(req, res);
+    const userData = await handleUserRouter(req, res);
     if (userData) {
         res.end(JSON.stringify(userData));
         return;

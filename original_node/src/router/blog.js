@@ -1,12 +1,14 @@
 const blogService = require('../service/blog')
 const { SuccessModel, ErrorModel } = require('../model/ResModel')
+const BlogModel = require('../model/BlogModel')
 
-const handleBlogRouter = (req, res) => {
+const handleBlogRouter = async (req, res) => {
     const { model, apiSuffix, method } = req;
     let resData = null;
     if (model !== 'blog') return;
-    if (method === 'GET') resData = _handleGet(req, apiSuffix);
-    if (method === 'POST') resData = _handlePost(req, apiSuffix);
+    if (method === 'GET') resData = await _handleGet(req, apiSuffix);
+    if (method === 'POST') resData = await _handlePost(req, apiSuffix);
+    console.log('返回结果resData', resData)
     return resData;
 }
 
@@ -34,34 +36,35 @@ const _handlePost = (req, apiSuffix) => {
     }
 }
 
-const _getList = (req) => {
+const _getList = async (req) => {
     const { query } = req;
-    const { author = '', keyword = '' } = query;
-    const result = blogService.getList({ author, keyword });
-    return _handleResult(listData)
+    const result = await blogService.getList(query);
+    return _handleResult(result)
 }
 
-const _getDetail = (req) => {
+const _getDetail = async (req) => {
     const { query } = req;
     const { id } = query;
-    const result = blogService.getDetail(id);
-    return _handleResult(blogDetail);
-}
-
-const _newBlog = (req) => {
-    const result = blogService.newBlog(req.body);
+    const result = await blogService.getDetail(id);
     return _handleResult(result);
 }
 
-const _updateBlog = (req) => {
+const _newBlog = async (req) => {
+    const blogData = new BlogModel(req.body);
+    const result = await blogService.newBlog(blogData);
+    return _handleResult(result);
+}
+
+const _updateBlog = async (req) => {
     const { id } = req.query;
-    const result = blogService.updateBlog(id, req.body);
+    const blogData = new BlogModel(req.body);
+    const result = await blogService.updateBlog(id, blogData);
     return _handleResult(result, '更新博客失败');
 }
 
-const _deleteBlog = (req) => {
-    const { id } = req.query;
-    const result = blogService.deleteBlog(id);
+const _deleteBlog = async (req) => {
+    const { id } = req.body;
+    const result = await blogService.deleteBlog(id);
     return _handleResult(result, '删除博客失败');
 }
 

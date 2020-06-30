@@ -1,8 +1,9 @@
+const { queryOne } = require('../db/index')
+
 const login = (username, password) => {
-    if (username === '张三' && password === '123') {
-        return true;
-    }
-    return false;
+    return queryOne(
+        `select username,realname from user where username='${username}' and \`password\`='${password}'`
+    )
 }
 
 module.exports = {
