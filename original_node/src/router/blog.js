@@ -1,10 +1,17 @@
 const blogService = require('../service/blog')
 const { SuccessModel, ErrorModel } = require('../model/ResModel')
 const BlogModel = require('../model/BlogModel')
+const { loginCheck } = require('./login')
 
 const handleBlogRouter = async (req, res) => {
     const { model, apiSuffix, method } = req;
     let resData = null;
+    if (loginCheck(req)) {
+        console.log('no login');
+        // 未登录
+        resData = await loginCheck;
+        return resData;
+    }
     if (model !== 'blog') return;
     if (method === 'GET') resData = await _handleGet(req, apiSuffix);
     if (method === 'POST') resData = await _handlePost(req, apiSuffix);
@@ -50,6 +57,7 @@ const _getDetail = async (req) => {
 }
 
 const _newBlog = async (req) => {
+    req.body.author = req.session.username;    // test data
     const blogData = new BlogModel(req.body);
     const result = await blogService.newBlog(blogData);
     return _handleResult(result);
@@ -64,6 +72,7 @@ const _updateBlog = async (req) => {
 
 const _deleteBlog = async (req) => {
     const { id } = req.body;
+    const author = req.session.username;
     const result = await blogService.deleteBlog(id);
     return _handleResult(result, '删除博客失败');
 }

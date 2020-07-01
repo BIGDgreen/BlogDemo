@@ -13,20 +13,16 @@ const isObject = o => Object.prototype.toString.call(o) === '[object Object]'
 const isString = s => typeof s === 'string'
 
 /**
- * 给一个词包围反引号
- * @param {*} s 
- * @returns {string}
+ * 生成一个新的userId
+ * @returns {number}
  */
-const inBackticks = s => `\`${s}\``;
-
-/**
- * 给一个词包围引号
- * @param {*} s
- * @returns {string}
- */
-const inQuotes = s => `'${s}'`
+const newUserId = () => {
+    const random = `${Math.random()}`.slice(2);
+    return `${Date.now()}_${random}`;
+}
 
 module.exports = {
     isObject,
-    isString
+    isString,
+    newUserId
 }

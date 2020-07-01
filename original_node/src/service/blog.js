@@ -48,8 +48,8 @@ const updateBlog = (id, blogData = {}) => {
  * 删除博客
  * @param {number} id 
  */
-const deleteBlog = (id) => {
-    return deleteSql(id, {}, 'blog');
+const deleteBlog = (id, author) => {
+    return deleteSql(id, author, {}, 'blog');
 }
 
 module.exports = {

@@ -1,5 +1,6 @@
 const handleBlogRouter = require('./blog')
 const handleUserRouter = require('./user')
+const { setCookie } = require('../utils/cookieOperation')
 
 const handleRouter = async (req, res) => {
     const pathArr = req.path.split('/');
@@ -11,6 +12,7 @@ const handleRouter = async (req, res) => {
     // blogData 为SuccessModel或ErrorModel实例
     const blogData = await handleBlogRouter(req, res);
     if (blogData) {
+        setCookie(res, `userId=${global.userId}`);
         res.end(JSON.stringify(blogData));
         return;
     }
@@ -18,6 +20,7 @@ const handleRouter = async (req, res) => {
     // 处理与用户相关的路由
     const userData = await handleUserRouter(req, res);
     if (userData) {
+        setCookie(res, `userId=${global.userId}`);
         res.end(JSON.stringify(userData));
         return;
     }

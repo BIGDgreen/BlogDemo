@@ -13,5 +13,8 @@
   "license": "ISC",
   "devDependencies": {
     "cross-env": "^7.0.2"
+  },
+  "dependencies": {
+    "redis": "^3.0.2"
   }
 }

@@ -119,7 +119,7 @@ const update = (id, model, tablename) => {
  * @param {object} model 
  * @param {string} tablename 
  */
-const deleteSql = (id, model, tablename) => {
+const deleteSql = (id, author, model, tablename) => {
     model.state = 0;
     update(id, model, tablename);
 }
