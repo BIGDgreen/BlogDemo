@@ -1,8 +1,9 @@
 const http = require('http')
-const { PORT, NODE_ENV } = require('../utils/constant')
+const { PORT, ENV } = require('../utils/constant')
 const serverHandle = require('../app')
 
-process.env.NODE_ENV = NODE_ENV
+// 设置开发/生产环境
+process.env.NODE_ENV = ENV
 
 const server = http.createServer(serverHandle)
 

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "live-server --port=8001"
+    "live": "live-server --port=8001"
   },
   "keywords": [],
   "author": "",

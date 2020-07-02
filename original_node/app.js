@@ -2,6 +2,7 @@ const querystring = require('querystring')
 const handleRouter = require('./src/router/index')
 const { newUserId } = require('./utils/index')
 const { set, get } = require('./src/redis/index')
+const { access } = require('./src/utils/log')
 
 /**
  * 获取post方法传入的参数
@@ -28,7 +29,6 @@ const parseQuery = (req, url) => {
 const parseCookie = (req) => {
     req.cookie = {};
     const cookieStr = req.headers.cookie || '';
-    console.log('cookieStr', cookieStr);
     if (cookieStr) {
         cookieStr.split(';').forEach(item => {
             if (!item) return;
@@ -73,6 +73,9 @@ const parseSession = (req, res) => {
 }
 
 const serverHandle = (req, res) => {
+    // 写 access log
+    access(`${req.method} -- ${req.url} -- ${req.headers['user-agent']} -- ${Date.now()}`);
+
     // 设置返回格式
     res.setHeader('Content-type', 'application/json');
 
