@@ -1,4 +1,5 @@
-const { querySql, queryOne, insert, update, deleteSql, escape } = require('../db/index')
+const { querySql, queryOne, insert, update, deleteSql } = require('../db/index')
+const { transform, transformObject } = require('../utils/transformInput')
 
 /**
  * 获取所有博客列表
@@ -6,9 +7,9 @@ const { querySql, queryOne, insert, update, deleteSql, escape } = require('../db
  * @returns {Promise}
  */
 const getList = (query) => {
-    const { author = '', keyword = '' } = query;
-    author = escape(author);
-    keyword = escape(keyword);
+    let { author = '', keyword = '' } = query;
+    author = transform(author);
+    keyword = transform(keyword).replace(/^['|"](.*)['|"]$/, "$1");
     let sql = 'select * from blog';
     if (author || keyword) {
         sql += ' where `state`=1 ';
@@ -25,7 +26,7 @@ const getList = (query) => {
  * @returns {Promise}
  */
 const getDetail = (id) => {
-    id = escape(id);
+    id = transform(id);
     return queryOne(`select * from blog where \`state\`=1 and id=${id};`);
 }
 
@@ -35,7 +36,7 @@ const getDetail = (id) => {
  * @returns {Promise}
  */
 const newBlog = (blogData = {}) => {
-    escapeObject(blogData);
+    transformObject(blogData);
     return insert(blogData, 'blog')
 }
 
@@ -45,8 +46,8 @@ const newBlog = (blogData = {}) => {
  * @param {object} blogData 
  */
 const updateBlog = (id, blogData = {}) => {
-    id = escape(id);
-    escapeObject(blogData);
+    id = transform(id);
+    transformObject(blogData);
     return update(id, '', blogData, 'blog');
 }
 
@@ -55,17 +56,9 @@ const updateBlog = (id, blogData = {}) => {
  * @param {number} id 
  */
 const deleteBlog = (id, author) => {
-    id = escape(id);
-    author = escape(author);
+    id = transform(id);
+    author = transform(author);
     return deleteSql(id, author, {}, 'blog');
-}
-
-const escapeObject = (obj) => {
-    Object.keys(obj).forEach(key => {
-        if (obj.hasOwnProperty(key)) {
-            obj[key] = escape(obj[key]);
-        }
-    });
 }
 
 module.exports = {

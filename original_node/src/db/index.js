@@ -132,6 +132,5 @@ module.exports = {
     queryOne,
     insert,
     update,
-    deleteSql,
-    escape: mysql.escape
+    deleteSql
 }
