@@ -16,11 +16,11 @@ const getCookieExpires = () => {
  * @param {boolean} httpOnly 是否为客户端设置限制，默认为true
  */
 const setCookie = (res, value, path = '/', httpOnly = true, expires) => {
-    if (!global.needSetCookie) return;
     if (!expires) expires = getCookieExpires();
     path && (value += `path=${path};`);
     httpOnly && (value += 'httpOnly;');
-    value += `expires=${expires}`;
+    value += `expires=${expires};`;
+    console.log('设置cookie', value);
     res.setHeader('Set-Cookie', value);
 }
 

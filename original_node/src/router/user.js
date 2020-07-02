@@ -1,17 +1,12 @@
 const userService = require('../service/user')
 const { SuccessModel, ErrorModel } = require('../model/ResModel')
-
-const checkLogin = (req) => {
-    return !!req.session.username
-}
+const { set } = require('../redis/index')
 
 const handleUserRouter = async (req, res) => {
     const { model, apiSuffix, method } = req;
     let resData = null;
     if (model !== 'user') return;
     // 登录
-    if (checkLogin(req)) return new SuccessModel('已登录');
-    console.log('checkLogin:', checkLogin(req), req.session)
     if (method === 'POST') resData = await _handlePost(req, res, apiSuffix);
     console.log('login resData:', resData);
     return resData;
@@ -27,11 +22,14 @@ const _handlePost = (req, res, apiSuffix) => {
 }
 
 const _login = async (req, res) => {
+    console.log('logining...')
     const { username, password } = req.body;
     const result = await userService.login(username, password);
-    console.log('needSetCookie', global.needSetCookie);
-    if (global.needSetCookie) {
+    // console.log('数据库查询登录后登录结果', result);
+    if (result && result.username) {
         setSession(req, result);
+        // 同步到redis
+        set(req.sessionId, req.session);
     }
     return _handleResult(result, '登录失败');
 }

@@ -6,10 +6,10 @@ const { loginCheck } = require('./login')
 const handleBlogRouter = async (req, res) => {
     const { model, apiSuffix, method } = req;
     let resData = null;
-    if (loginCheck(req)) {
+    if (!loginCheck(req)) {
         console.log('no login');
         // 未登录
-        resData = await loginCheck;
+        resData = await loginCheck(req);
         return resData;
     }
     if (model !== 'blog') return;
@@ -45,6 +45,11 @@ const _handlePost = (req, apiSuffix) => {
 
 const _getList = async (req) => {
     const { query } = req;
+    const { isadmin } = query;
+    if (isadmin) {
+        // 查看自己的博客
+        query.author = req.session.username;
+    }
     const result = await blogService.getList(query);
     return _handleResult(result)
 }
@@ -65,7 +70,9 @@ const _newBlog = async (req) => {
 
 const _updateBlog = async (req) => {
     const { id } = req.query;
+    console.log(req.body);
     const blogData = new BlogModel(req.body);
+    blogData.author = req.session.username;
     const result = await blogService.updateBlog(id, blogData);
     return _handleResult(result, '更新博客失败');
 }
@@ -73,7 +80,7 @@ const _updateBlog = async (req) => {
 const _deleteBlog = async (req) => {
     const { id } = req.body;
     const author = req.session.username;
-    const result = await blogService.deleteBlog(id);
+    const result = await blogService.deleteBlog(id, author);
     return _handleResult(result, '删除博客失败');
 }
 

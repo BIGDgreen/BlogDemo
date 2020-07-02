@@ -1,13 +1,18 @@
 const redis = require('redis');
-const { REDIS_CONF } = require('./config');
+const REDIS_CONF = require('./config');
 
 const { port, host } = REDIS_CONF;
 const redisClient = redis.createClient(port, host);
 
-redis.on('error', err => {
+redisClient.on('error', err => {
     console.error(err);
 });
 
+/**
+ * 设置redis
+ * @param {string} key 
+ * @param {*} value 
+ */
 const set = (key, value) => {
     if (typeof value === 'object') {
         value = JSON.stringify(value);
@@ -22,8 +27,11 @@ const get = (key) => {
                 reject(err);
                 reutrn;
             }
-            console.log('redis value:', val);
-            if (val === null) resolve(null);
+            // console.log('redis value:', val);
+            if (val === null) {
+                resolve(null);
+                return;
+            }
             try {
                 // 如果val为JSON字符串。则返回JSON对象
                 resolve(JSON.parse(val))

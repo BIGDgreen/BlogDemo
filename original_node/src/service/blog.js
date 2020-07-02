@@ -9,11 +9,11 @@ const getList = (query) => {
     const { author = '', keyword = '' } = query;
     let sql = 'select * from blog';
     if (author || keyword) {
-        sql += ' where 1=1 ';
+        sql += ' where `state`=1 ';
         author && (sql += `and author='${author}'`);
         keyword && (sql += `and title like '%${keyword}%'`)
     }
-    sql += 'order by createtime desc;'
+    sql += ' order by createtime desc;'
     return querySql(sql);
 }
 
@@ -23,7 +23,7 @@ const getList = (query) => {
  * @returns {Promise}
  */
 const getDetail = (id) => {
-    return queryOne(`select * from blog where id='${id}';`);
+    return queryOne(`select * from blog where \`state\`=1 and id='${id}';`);
 }
 
 /**

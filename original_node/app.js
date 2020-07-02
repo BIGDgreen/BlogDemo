@@ -1,9 +1,7 @@
 const querystring = require('querystring')
 const handleRouter = require('./src/router/index')
 const { newUserId } = require('./utils/index')
-
-// session数据
-const SESSION_DATA = {};
+const { set, get } = require('./src/redis/index')
 
 /**
  * 获取post方法传入的参数
@@ -30,6 +28,7 @@ const parseQuery = (req, url) => {
 const parseCookie = (req) => {
     req.cookie = {};
     const cookieStr = req.headers.cookie || '';
+    console.log('cookieStr', cookieStr);
     if (cookieStr) {
         cookieStr.split(';').forEach(item => {
             if (!item) return;
@@ -41,21 +40,36 @@ const parseCookie = (req) => {
     }
 }
 
-const parseSession = (req) => {
-    userId = req.cookie.userid || '';
-    if (userId) {
-        SESSION_DATA[userId] = SESSION_DATA[userId] || {};
-        global.needSetCookie = true;
-    } else {
-        // 创造一个不会重复的userId
-        global.userId = newUserId();
-        // console.log('userId', global.userId);
-        SESSION_DATA[userId] = {};
+// 使用redis解析session，设置好session后处理路由
+const parseSession = (req, res) => {
+    let needSetCookie = false;
+    console.log("cookie", req.cookie);
+    let userId = req.cookie.userId || '';
+    if (!userId) {
         // 需要设置cookie存储userId
-        global.needSetCookie = true;
-        // console.log(global.needSetCookie);
+        needSetCookie = true;
+        // 创造一个不会重复的userId
+        userId = newUserId();
+        // console.log('userId', userId);
+        set(userId, {});
     }
-    req.session = SESSION_DATA[userId];
+    req.sessionId = userId;
+    get(req.sessionId)
+        .then(sessionData => {
+            if (sessionData === null) {
+                set(req.sessionId, {});
+                req.session = {};
+            } else {
+                req.session = sessionData;
+            }
+            // console.log("req.session", req.session);
+            return getPostData(req);
+        })
+        .then(postData => {
+            req.body = postData;
+            // 处理路由
+            handleRouter(req, res, needSetCookie);
+        });
 }
 
 const serverHandle = (req, res) => {
@@ -72,15 +86,8 @@ const serverHandle = (req, res) => {
     // 解析cookie，为req添加cookie属性
     parseCookie(req);
 
-    // 解析session
-    parseSession(req);
-
-    // 获取post方法传入的参数
-    getPostData(req).then(postData => {
-        req.body = postData;
-        // 处理路由
-        handleRouter(req, res);
-    })
+    // 解析session并处理路由
+    parseSession(req, res);
 }
 
 module.exports = serverHandle

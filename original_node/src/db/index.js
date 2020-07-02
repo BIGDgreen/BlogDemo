@@ -92,7 +92,8 @@ const insert = (model, tablename) => {
  * @param {object} model 
  * @param {string} tablename 
  */
-const update = (id, model, tablename) => {
+const update = (id, author, model, tablename) => {
+    // console.log('update', model);
     return new Promise((resolve, reject) => {
         if (!isObject(model)) {
             reject(new Error('更新数据库失败，更新数据非对象'));
@@ -104,9 +105,11 @@ const update = (id, model, tablename) => {
                 condition.push(`\`${key}\`='${model[key]}'`);
             }
         })
-        let sql = `update ${tablename} set ${condition.join(',')} where id=${id}  `;
+        let sql = `update ${tablename} set ${condition.join(',')} where id=${id} `;
+        if (author) sql += `and author='${author}'`;
+        sql += ' and state=1';
         querySql(sql).then(result => {
-            resolve('更新成功')
+            resolve('操作成功', result)
         }).catch(err => {
             reject(err)
         })
@@ -121,7 +124,7 @@ const update = (id, model, tablename) => {
  */
 const deleteSql = (id, author, model, tablename) => {
     model.state = 0;
-    update(id, model, tablename);
+    return update(id, author, model, tablename);
 }
 
 module.exports = {
