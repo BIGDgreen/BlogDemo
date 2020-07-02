@@ -6,7 +6,7 @@ const escape = require('mysql').escape;
  * @param {string} str 
  */
 const transform = (str) => {
-    return xss(escape(str));
+    return escape(xss(str));
 }
 
 /**

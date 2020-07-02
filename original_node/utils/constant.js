@@ -3,5 +3,6 @@ module.exports = {
     CODE_SUCCESS: 0,    // 成功状态码
     PORT: 8000, // 端口
     ENV: 'dev',    // 环境：开发环境
-    EXPIRED_TIME: 24 * 60 * 60 * 1000   // cookie过期时间：1天
+    EXPIRED_TIME: 24 * 60 * 60 * 1000,   // cookie过期时间：1天
+    SECRET_KEY: 'BigDgreen_blog$demo'   // 密匙
 }
