@@ -21,6 +21,14 @@ const newUserId = () => {
     return `${Date.now()}_${random}`;
 }
 
+/**
+ * 转义单引号
+ * @param {string} string 
+ */
+const replaceQuote = (string) => {
+    return string.replace(/\'/g, '\\\'');
+}
+
 module.exports = {
     isObject,
     isString,

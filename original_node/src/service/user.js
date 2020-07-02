@@ -1,8 +1,10 @@
-const { queryOne } = require('../db/index')
+const { queryOne, escape } = require('../db/index')
 
 const login = (username, password) => {
+    username = escape(username);
+    password = escape(password);
     return queryOne(
-        `select username,realname from user where username='${username}' and \`password\`='${password}'`
+        `select username,realname from user where username=${username} and \`password\`=${password}`
     )
 }
 

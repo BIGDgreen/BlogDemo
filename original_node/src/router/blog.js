@@ -72,6 +72,7 @@ const _updateBlog = async (req) => {
     const { id } = req.query;
     console.log(req.body);
     const blogData = new BlogModel(req.body);
+    // console.log('原blog', blogData);
     blogData.author = req.session.username;
     const result = await blogService.updateBlog(id, blogData);
     return _handleResult(result, '更新博客失败');
