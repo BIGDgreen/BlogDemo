@@ -69,7 +69,7 @@ const insert = (model, tablename) => {
             Object.keys(model).forEach(key => {
                 if (model.hasOwnProperty(key)) { // key为model自身的属性，而非原型链上继承的
                     keys.push(`\`${key}\``) // push的实际内容为`key`，加上反引号避免key被识别为关键字
-                    values.push(`${model[key]}`)
+                    values.push(`'${model[key]}'`)
                 }
             })
             if (keys.length === 0 || values.length === 0) {
@@ -102,11 +102,11 @@ const update = (id, author, model, tablename) => {
         let condition = [];
         Object.keys(model).forEach(key => {
             if (model.hasOwnProperty(key)) {
-                condition.push(`\`${key}\`=${model[key]}`);
+                condition.push(`\`${key}\`='${model[key]}'`);
             }
         })
-        let sql = `update ${tablename} set ${condition.join(',')} where id=${id} `;
-        if (author) sql += `and author=${author}`;
+        let sql = `update ${tablename} set ${condition.join(',')} where id='${id}' `;
+        if (author) sql += `and author='${author}'`;
         sql += ' and state=1';
         querySql(sql).then(result => {
             resolve('操作成功', result)

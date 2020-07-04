@@ -4,5 +4,5 @@ module.exports = {
     PORT: 8000, // 端口
     ENV: 'dev',    // 环境：开发环境
     EXPIRED_TIME: 24 * 60 * 60 * 1000,   // cookie过期时间：1天
-    SECRET_KEY: 'BigDgreen_blog$demo'   // 密匙
+    PASSWORD_SALT: 'BigDgreen_blog$demo'   // 密匙
 }

@@ -1,5 +1,5 @@
 const crypto = require('crypto');
-const { SECRET_KEY } = require('../../utils/constant')
+const { PASSWORD_SALT } = require('../../utils/constant')
 
 // md5加密
 const md5 = (content) => {
@@ -9,7 +9,7 @@ const md5 = (content) => {
 
 // 加密函数
 const genPassword = (password) => {
-    const str = `password=${password}&key=${SECRET_KEY}`;
+    const str = `password=${password}&key=${PASSWORD_SALT}`;
     return md5(str);
 }
 

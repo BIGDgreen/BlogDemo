@@ -2,11 +2,11 @@ const xss = require('xss');
 const escape = require('mysql').escape;
 
 /**
- * 防止sql注入和xss攻击
+ * 防止sql注入和xss攻击，并去掉首尾的引号
  * @param {string} str 
  */
 const transform = (str) => {
-    return escape(xss(str));
+    return escape(xss(str)).replace(/^['|"](.*)['|"]$/, "$1");
 }
 
 /**

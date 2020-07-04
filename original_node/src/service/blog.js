@@ -9,11 +9,11 @@ const { transform, transformObject } = require('../utils/transformInput')
 const getList = (query) => {
     let { author = '', keyword = '' } = query;
     author = transform(author);
-    keyword = transform(keyword).replace(/^['|"](.*)['|"]$/, "$1");
+    keyword = transform(keyword);
     let sql = 'select * from blog';
     if (author || keyword) {
         sql += ' where `state`=1 ';
-        author && (sql += `and author=${author}`);
+        author && (sql += `and author='${author}'`);
         keyword && (sql += `and title like '%${keyword}%'`)
     }
     sql += ' order by createtime desc;'
@@ -27,7 +27,7 @@ const getList = (query) => {
  */
 const getDetail = (id) => {
     id = transform(id);
-    return queryOne(`select * from blog where \`state\`=1 and id=${id};`);
+    return queryOne(`select * from blog where \`state\`=1 and id='${id}';`);
 }
 
 /**
