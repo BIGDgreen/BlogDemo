@@ -19,6 +19,7 @@ const app = express();
 // app.set('views', path.join(__dirname, 'views'));
 // app.set('view engine', 'jade');
 
+// 写日志配置
 const env = process.env.NODE_ENV;
 if (env === 'dev') {
   app.use(logger('dev'));
