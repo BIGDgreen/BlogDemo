@@ -8,7 +8,6 @@ const handleUserRouter = async (req, res) => {
     if (model !== 'user') return;
     // 登录
     if (method === 'POST') resData = await _handlePost(req, res, apiSuffix);
-    console.log('login resData:', resData);
     return resData;
 }
 
@@ -31,7 +30,7 @@ const _login = async (req, res) => {
         // 同步到redis
         set(req.sessionId, req.session);
     }
-    return _handleResult(result, '登录失败');
+    return _handleResult(result, '登录失败，用户名密码错误');
 }
 
 const _handleResult = (result, errorMsg = '未知错误') => {
@@ -41,9 +40,8 @@ const _handleResult = (result, errorMsg = '未知错误') => {
 
 
 const setSession = (req, result) => {
-    const { username, realname } = result;
+    const { username } = result;
     username && (req.session.username = username);
-    realname && (req.session.realname = realname);
     console.log('session', req.session);
 }
 

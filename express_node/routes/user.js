@@ -10,7 +10,6 @@ router.post('/login', async (req, res, next) => {
   if (result) {
     if (result.username) {
       req.session.username = result.username;
-      req.session.realname = result.realname;
       res.json(new SuccessModel(result));
       return;
     }

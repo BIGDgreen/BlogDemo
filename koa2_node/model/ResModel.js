@@ -1,5 +1,5 @@
 const { isString } = require('../utils/index')
-const { CODE_ERROR, CODE_SUCCESS } = require('../utils/constant')
+const { CODE_ERROR, CODE_SUCCESS, CODE_NOLOGIN } = require('../utils/constant')
 
 class BaseModel {
     /**
@@ -14,6 +14,8 @@ class BaseModel {
             this.msg = data;
             data = null;
             msg = null;
+        } else if (data === -2) {
+            this.state = 'noLogin';
         }
         data && (this.data = data);
         msg && (this.msg = msg);
@@ -42,7 +44,7 @@ class ErrorModel extends BaseModel {
      */
     constructor(data, msg) {
         super(data, msg);
-        this.errNo = CODE_ERROR;
+        this.errNo = this.state ? CODE_NOLOGIN : CODE_ERROR;
     }
 }
 

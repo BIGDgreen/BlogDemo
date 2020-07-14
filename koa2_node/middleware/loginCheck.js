@@ -10,7 +10,7 @@ const loginCheck = async (ctx, next) => {
         await next();
         return true;
     }
-    ctx.body = new ErrorModel('未登录');
+    ctx.body = new ErrorModel(-2, '未登录');
     return false;
 }
 

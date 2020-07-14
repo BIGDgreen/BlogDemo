@@ -11,7 +11,7 @@ const login = (username, password) => {
     username = transform(username);
     password = transform(genPassword(password))
     return queryOne(
-        `select username,realname from user where username='${username}' and \`password\`='${password}'`
+        `select username from user where username='${username}' and \`password\`='${password}'`
     )
 }
 

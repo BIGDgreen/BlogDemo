@@ -7,13 +7,13 @@ const { transform, transformObject } = require('../utils/transformInput')
  * @returns {Promise}
  */
 const getList = async (query) => {
-    let { author = '', keyword = '' } = query;
+    let { author = '', title = '' } = query;
     author = transform(author);
-    keyword = transform(keyword);
+    title = transform(title);
     let sql = 'select * from blog where `state`=1 ';
-    if (author || keyword) {
-        author && (sql += `and author='${author}'`);
-        keyword && (sql += `and title like '%${keyword}%'`)
+    if (author || title) {
+        author && (sql += `and author like '%${author}%'`);
+        title && (sql += `and title like '%${title}%'`)
     }
     sql += ' order by createtime desc;'
     return await querySql(sql);
