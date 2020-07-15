@@ -7,14 +7,14 @@ const { transform, transformObject } = require('../utils/transformInput')
  * @returns {Promise}
  */
 const getList = (query) => {
-    let { author = '', keyword = '' } = query;
+    let { author = '', title = '' } = query;
     author = transform(author);
-    keyword = transform(keyword);
+    title = transform(title);
     let sql = 'select * from blog';
-    if (author || keyword) {
+    if (author || title) {
         sql += ' where `state`=1 ';
         author && (sql += `and author='${author}'`);
-        keyword && (sql += `and title like '%${keyword}%'`)
+        title && (sql += `and title like '%${title}%'`)
     }
     sql += ' order by createtime desc;'
     return querySql(sql);

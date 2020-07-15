@@ -82,6 +82,7 @@ export default {
     .content {
       margin-top: 1rem;
       text-indent: 2rem;
+      word-wrap: break-word;
     }
   }
 }
